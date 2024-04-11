@@ -26,7 +26,7 @@ export default function Header() {
         <input
           type="text"
           placeholder="Search"
-          className="bg-gray-50 border border-gray-200 rounded text-sm w-full py-2 px-1 max-w-[210px]"
+          className="bg-gray-50 border border-gray-200 rounded-md text-sm w-full py-2 px-1 max-w-[210px] border-"
         />
 
         <button className="text-blue-500 font-semibold text-sm">Login</button>
