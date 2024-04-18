@@ -1,3 +1,4 @@
+// import dotenv from "dotenv"
 import NextAuth from "next-auth"
 import GOOGLEProvider from "next-auth/providers/GOOGLE"
 const handler = NextAuth({
@@ -5,7 +6,7 @@ const handler = NextAuth({
     providers: [
         GOOGLEProvider({
             clientId: process.env.GOOGLE_ID,
-            clientSecId: process.env.GOOGLE_SECRET,
+            clientSecret: process.env.GOOGLE_SECRET,
         }),
     ],
 })
