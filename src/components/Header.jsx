@@ -61,9 +61,15 @@ export default function Header() {
         )}
       </div>
       {isOpen && (
-        <Modal isOpen={isOpen} onRequestClose={() => setIsOpen(false)}>
-          <div className="flex flex-col items-center">
-            <button onClick={signOut}>Sign Out</button>
+        <Modal
+          isOpen={isOpen}
+          onRequestClose={() => setIsOpen(false)}
+          className="max-w-lg w-[90%] absolute top-56 left-[50%] translate-x-[-50%] border-2 rounded-md shadow-md p-6"
+          ariaHideApp={false}
+        >
+          <div>
+            <h1>Modal</h1>
+            <button onClick={() => setIsOpen(false)}>Close</button>
           </div>
         </Modal>
       )}
