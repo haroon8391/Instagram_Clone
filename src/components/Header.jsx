@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 export default function Header() {
   const { data: session } = useSession();
@@ -39,10 +39,11 @@ export default function Header() {
             src={session.user.image}
             alt={session.user.name}
             className="h-10 w-10 rounded-full cursor-pointer"
+            onClick={signOut}
           />
         ) : (
           <button
-            onClick={() => signIn()}
+            onClick={signIn}
             className="text-blue-500 font-semibold text-sm"
           >
             Login
