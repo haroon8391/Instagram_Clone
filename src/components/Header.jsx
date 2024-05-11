@@ -12,6 +12,16 @@ import { AiOutlineClose } from "react-icons/ai";
 export default function Header() {
   const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [imageFileUrl, setImageFileUrl] = useState(null);
+
+  const addImageToPost = () => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      setImageFileUrl(URL.createObjectURL(file));
+    }
+  };
 
   return (
     <div className="shadow-sm border-b sticky top-0 z-0 p-2">
@@ -71,6 +81,7 @@ export default function Header() {
         >
           <div className="flex flex-col justify-center items-center">
             <FaCamera className="h-8 w-8 text-gray-400 cursor-pointer" />
+            <input type="file" accept="image/*" onChange={addImageToPost} />
             <input
               type="text"
               maxLength={150}
