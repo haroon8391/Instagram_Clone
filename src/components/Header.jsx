@@ -6,6 +6,8 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Modal from "react-modal";
 import { useState } from "react";
 import { IoMdAddCircleOutline } from "react-icons/io";
+import { FaCamera } from "react-icons/fa";
+import { AiOutlineClose } from "react-icons/ai";
 
 export default function Header() {
   const { data: session } = useSession();
@@ -67,9 +69,23 @@ export default function Header() {
           className="max-w-lg w-[90%] absolute top-56 left-[50%] translate-x-[-50%] border-2 rounded-md shadow-md p-6"
           ariaHideApp={false}
         >
-          <div>
-            <h1>Modal</h1>
-            <button onClick={() => setIsOpen(false)}>Close</button>
+          <div className="flex flex-col justify-center items-center">
+            <FaCamera className="h-8 w-8 text-gray-400 cursor-pointer" />
+            <input
+              type="text"
+              maxLength={150}
+              placeholder="Please Enter Your Caption..."
+              className="p-2 rounded-md w-full border-none outline-none text-center mt-2 mb-2"
+            />
+            <button className="bg-red-600 w-full p-2 rounded-lg text-white shadow-md hover:brightness-125 disabled:brightness-100 disabled:cursor-not-allowed disabled:bg-gray-200">
+              Upload Post
+            </button>
+            <AiOutlineClose
+              className="cursor-pointer absolute top-0 right-0 m-2 hover:h-5 hover:w-5 hover:text-red-800 transition duration-300"
+              onClick={() => {
+                setIsOpen(false);
+              }}
+            />
           </div>
         </Modal>
       )}
