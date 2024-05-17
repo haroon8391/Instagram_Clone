@@ -9,7 +9,8 @@ const firebaseConfig = {
     appId: "1:555320694229:web:e20030d4fcc89c7c61595c"
 };
 
-export const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+export default app;
 
 // service firebase.storage {
 //     match / b / { bucket } / o {

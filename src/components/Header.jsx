@@ -2,19 +2,27 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import app from "../firebase";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Modal from "react-modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { FaCamera } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
 import { useRef } from "react";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
 
 export default function Header() {
   const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
+  const [imageFileUploading, setImageFileUploading] = useState(false);
   const filePickerRef = useRef(null);
 
   const addImageToPost = (e) => {
@@ -24,6 +32,39 @@ export default function Header() {
       setImageFileUrl(URL.createObjectURL(file));
     }
   };
+
+  const uploadImagetoStorage = async () => {
+    setImageFileUploading(true);
+    const storage = getStorage(app);
+    const fileName = new Date().getTime() + "-" + selectedFile.name;
+    const storageRef = ref(storage, fileName);
+    const uploadTask = uploadBytesResumable(storageRef, selectedFile);
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("Upload is " + progress + "% done");
+      },
+      (error) => {
+        console.log(error);
+        setImageFileUploading(false);
+        setSelectedFile(null);
+        setImageFileUrl(null);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setImageFileUrl(downloadURL);
+          setImageFileUploading(false);
+        });
+      }
+    );
+  };
+  useEffect(() => {
+    if (selectedFile) {
+      uploadImagetoStorage();
+    }
+  }, [selectedFile]);
 
   return (
     <div className="shadow-sm border-b sticky top-0 z-0 p-2">
@@ -108,7 +149,10 @@ export default function Header() {
               placeholder="Please Enter Your Caption..."
               className="p-2 rounded-md w-full border-none outline-none text-center mt-2 mb-2"
             />
-            <button className="bg-red-600 w-full p-2 rounded-lg text-white shadow-md hover:brightness-125 disabled:brightness-100 disabled:cursor-not-allowed disabled:bg-gray-200">
+            <button
+              disabled={!selectedFile}
+              className="bg-red-600 w-full p-2 rounded-lg text-white shadow-md hover:brightness-125 disabled:brightness-100 disabled:cursor-not-allowed disabled:bg-gray-200"
+            >
               Upload Post
             </button>
             <AiOutlineClose
