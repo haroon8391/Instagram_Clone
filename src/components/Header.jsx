@@ -128,7 +128,9 @@ export default function Header() {
                 onClick={() => setSelectedFile(null)}
                 src={imageFileUrl}
                 alt="Selected Image"
-                className="w-full max-h-[250px] object-cover cursor-pointer"
+                className={`w-full max-h-[250px] object-cover cursor-pointer ${
+                  imageFileUploading ? "animate-pulse" : ""
+                }`}
               />
             ) : (
               <FaCamera
