@@ -8,14 +8,16 @@ import { useState } from "react";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { FaCamera } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
+import { useRef } from "react";
 
 export default function Header() {
   const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
+  const filePickerRef = useRef(null);
 
-  const addImageToPost = () => {
+  const addImageToPost = (e) => {
     const file = e.target.files[0];
     if (file) {
       setSelectedFile(file);
@@ -80,8 +82,26 @@ export default function Header() {
           ariaHideApp={false}
         >
           <div className="flex flex-col justify-center items-center">
-            <FaCamera className="h-8 w-8 text-gray-400 cursor-pointer" />
-            <input type="file" accept="image/*" onChange={addImageToPost} />
+            {selectedFile ? (
+              <img
+                onClick={() => setSelectedFile(null)}
+                src={imageFileUrl}
+                alt="Selected Image"
+                className="w-full max-h-[250px] object-cover cursor-pointer"
+              />
+            ) : (
+              <FaCamera
+                onClick={() => filePickerRef.current.click()}
+                className="h-8 w-8 text-gray-400 cursor-pointer"
+              />
+            )}
+            <input
+              type="file"
+              hidden
+              accept="image/*"
+              ref={filePickerRef}
+              onChange={addImageToPost}
+            />
             <input
               type="text"
               maxLength={150}
