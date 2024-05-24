@@ -16,6 +16,12 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
+import {
+  addDoc,
+  collection,
+  getFirestore,
+  serverTimestamp,
+} from "firebase/firestore";
 
 export default function Header() {
   const { data: session } = useSession();
@@ -23,7 +29,10 @@ export default function Header() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [imageFileUploading, setImageFileUploading] = useState(false);
+  const [postUploading, setPostUploading] = useState(false);
+  const [caption, setCaption] = useState("");
   const filePickerRef = useRef(null);
+  const db = getFirestore(app);
 
   const addImageToPost = (e) => {
     const file = e.target.files[0];
@@ -65,6 +74,20 @@ export default function Header() {
       uploadImagetoStorage();
     }
   }, [selectedFile]);
+
+  const handleSubmit = async () => {
+    setPostUploading(true);
+    const docRef = await addDoc(collection(db, "posts"), {
+      username: session.user.username,
+      caption: caption,
+      profileImg: session.user.image,
+      image: imageFileUrl,
+      timestamp: serverTimestamp(),
+    });
+
+    setPostUploading(false);
+    setIsOpen(false);
+  };
 
   return (
     <div className="shadow-sm border-b sticky top-0 z-0 p-2">
@@ -150,10 +173,21 @@ export default function Header() {
               maxLength={150}
               placeholder="Please Enter Your Caption..."
               className="p-2 rounded-md w-full border-none outline-none text-center mt-2 mb-2"
+              onChange={(e) => {
+                e.target.value.length <= 150 && setCaption(e.target.value);
+              }}
             />
             <button
-              disabled={!selectedFile}
+              disabled={
+                !selectedFile ||
+                caption.trim() === "" ||
+                postUploading ||
+                imageFileUploading
+              }
               className="bg-red-600 w-full p-2 rounded-lg text-white shadow-md hover:brightness-125 disabled:brightness-100 disabled:cursor-not-allowed disabled:bg-gray-200"
+              onClick={() => {
+                handleSubmit();
+              }}
             >
               Upload Post
             </button>
