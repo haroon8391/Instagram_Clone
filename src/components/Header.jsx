@@ -90,7 +90,7 @@ export default function Header() {
   };
 
   return (
-    <div className="shadow-sm border-b sticky top-0 z-0 p-2">
+    <div className="shadow-sm border-b sticky top-0 z-10 p-2 bg-white">
       <div className="flex justify-between items-center max-w-7xl mx-auto">
         <Link href="/" className="hidden lg:inline-flex">
           <Image
